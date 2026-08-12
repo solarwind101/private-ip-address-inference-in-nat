@@ -1,4 +1,4 @@
-// Fast NAT ephemeral-port inference. Build: make. Run: sudo ./port_infer
+// NAT ephemeral-port inference. Build: make. Run: sudo ./port_infer
 
 #include <iostream>
 #include <vector>
