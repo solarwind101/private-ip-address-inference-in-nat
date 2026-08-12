@@ -1,14 +1,13 @@
-# TCP Connection Inference Behind NAT
+The code accompanying the paper, **“Private IP Address Inference in NAT Networks via Off-Path TCP Control-Plane Attack,”** demonstrates the attack to deanonymize TCP clients that is to infer the private IP addresses of TCP clients behind a NAT communicating with a target remote server.
 
-This project performs TCP connection inference and hijacking attacks behind a NAT.
 There are two steps to the attack:
-1. Inferring client-side ephemeral ports in use in the NAT (port preservation)
-2. Inferring NATed clients communicating with a target server
+
+1. **Inferring client-side ephemeral ports in use at the NAT** by exploiting port preservation and weak reverse-path validation in widely deployed NAT implementations.
+2. **Inferring NATed clients communicating with a target server** by exploiting the absence of TCP window tracking in the NAT, combined with TCP challenge ACK mechanisms.
 
 ## Prerequisites
 ### System Requirements
 - Linux (tested Ubuntu 24.02)
-- Root access (required for raw packet injection)
 
 ### Dependencies
 #### Scapy (Required for the Python scripts)
@@ -17,7 +16,7 @@ sudo apt update
 sudo apt install python3-scapy
 ```
 #### C++ port inference (Required for port_infer)
-The fast port inference tool is written in C++ and needs a compiler, make, and libtins.
+The port inference tool is written in C++ and needs a compiler, make, and libtins.
 ```bash
 sudo apt update
 sudo apt install g++ make libtins-dev libpcap-dev
@@ -25,7 +24,7 @@ sudo apt install g++ make libtins-dev libpcap-dev
 If your distro does not package libtins-dev, build it from source: https://github.com/mfontanini/libtins
 
 ## 1. Inferring Client Ports in Use (fast, C++)
-This is the recommended tool for step 1. It is a C++ reimplementation of `port-infer-main.py` and is much faster.
+This is the recommended tool for step 1. It is a C++ reimplementation of `port-infer-main.py` and is much faster (takes around 8-15s to infer the vicim ports)
 
 ### Build
 ```bash
@@ -60,9 +59,7 @@ sudo ./port_infer
 Ports that never return a SYN/ACK across all rounds are reported as in use by another client.
 
 ### Tuning notes
-- `-t ttl_syn` must be low enough that the probe SYN dies before reaching the server, but high enough to pass the NAT and create a mapping. Set it from your hop count to the NAT. If it is wrong, every result is unreliable.
-- If you see many false positives, the SYN/ACK replies are being lost. Lower `-b` or raise `-g` to reduce burst loss, and check the round-by-round "still missing" counts print. They should shrink fast.
-- Use `-d` to sanity check the crafted packets without sending anything.
+- `-t ttl_syn` must be low enough that the probe SYN dies before reaching the server, but high enough to pass the NAT and create a mapping. Set it from your hop count to the NAT. If it is wrong, every result is unreliable. This can be determined with tools like traceroute.
 
 ## 1b. Inferring Client Ports in Use (Python, reference)
 ### Configuration
