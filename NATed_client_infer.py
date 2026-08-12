@@ -1,35 +1,4 @@
 #!/usr/bin/env python3
-"""
-NAT Client Discovery Tool - Client Identification
-=================================================
-
-Description:
-    Discovers which internal clients behind a NAT are communicating with a specific
-    server on predetermined ports that are being used in the NAT device.
-    This tool attempts to take over TCP connections by exploiting NAT port
-    preservation strategy and the lack of TCP window tracking.
-    (Active ports were identified by the lack of reverse path validation along with the above assumptions)
-
-Attack Technique:
-    1. Sends spoofed RST-ACK packets from client IPs to reset potential NAT mapping.
-    2. Attempts SYN takeover in the NAT session table using the same source port from attacker's IP  
-    3. Server responses to detect successful connection inheritance
-
-Other Assumptions:
-    - Target server IP and port are known
-    - Guessed Client port range/values are pre-discovered through other methods (see port_infer_main.py)
-
-Usage:
-    sudo ./NATed-client-infer.py --subnet-mask 24 --ports-file known_ports.txt
-    sudo ./NATed-client-infer.py --subnet-mask 255.255.255.224 --default-ports 50000 60000 44201
-
-Output:
-    CSV file mapping client IPs to their used ports and connection status
-
-Author: Suraj Sharma
-Date: Nov 2024
-Email: suraj.sharma.8062@proton.me
-"""
 
 from __future__ import annotations
 import argparse, csv, datetime, ipaddress, os, sys, time
