@@ -43,13 +43,10 @@ The defaults live in the CONFIG block at the top of `port_infer.cpp`. You can ed
 -S start_port     Ephemeral port range start
 -E end_port       Ephemeral port range end
 -r rounds         Confirmation rounds a port must miss to count as in-use
--b batch          Ports per batch (small bursts keep packet loss low)
--g send_gap_us    Inter-packet spacing while sending
--c settle_us      Gap between SYN and SYN/ACK within a batch
--w wait_us        Drain wait after the last batch each round
+-b batch          Ports per batch 
 -t ttl_syn        TTL of the probe SYN (must die before the server)
 -T ttl_synack     TTL of the crafted SYN/ACK (must reach the NAT)
--d                Dump the first crafted SYN and SYN/ACK, then exit (no send)
+-d                Dump the first crafted SYN and SYN/ACK, then exit (don't send)
 ```
 
 ### Run
